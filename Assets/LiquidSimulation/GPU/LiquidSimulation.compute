@@ -1,0 +1,35 @@
+#pragma kernel advect
+
+// Shared
+RWTexture2D<float4> input;
+float timestep;
+float rdx;
+
+// Advection
+RWTexture2D<float2> velocity;
+
+[numthreads(8,8,1)]
+void advect(uint3 id : SV_DispatchThreadID)
+{
+    //uint2 pos = id.xy - timestep * rdx * velocity[id.xy];
+    //xNew = f4texRECTbilerp(x, pos);
+
+    Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+}
+
+
+//void advect(
+//    float2 coords : WPOS,     // grid coordinates
+//    out float4 xNew : COLOR,  // advected qty
+//    uniform float timestep,   
+//    uniform float rdx,        // 1 / grid scale
+//    uniform samplerRECT u,    // input velocity
+//    uniform samplerRECT x)    // qty to advect
+//{
+//    // follow the velocity field "back in time"
+//
+//    float2 pos = coords - timestep * rdx * f2texRECT(u, coords);
+//
+//    // interpolate and write to the output fragment
+//    xNew = f4texRECTbilerp(x, pos);
+//}
